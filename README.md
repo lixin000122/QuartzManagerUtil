@@ -1,0 +1,2 @@
+# QuartzManagerUtil
+基于spring的Quartz定时任务调度管理器工具类
