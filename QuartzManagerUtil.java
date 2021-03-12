@@ -17,6 +17,7 @@ import static org.quartz.CronScheduleBuilder.cronSchedule;
  * 使用quartz.properties进行配置
  *
  * @version 1.0.0
+ * @author lixin000122
  */
 public class QuartzManagerUtil {
 
