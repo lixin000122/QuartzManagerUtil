@@ -1,5 +1,3 @@
-import com.ftp.schedule.demo.quartz.listener.StdJobListener;
-import com.ftp.schedule.demo.quartz.listener.StdTriggerListener;
 import com.sun.istack.internal.NotNull;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
@@ -571,62 +569,6 @@ public class QuartzManagerUtil {
         JobDetail jobDetail = this.createJob(jobClass, jobName, jobGroup);
         Trigger trigger = this.createTrigger(triggerName, triggerGroup, cron);
         this.updateTask(jobDetail, trigger);
-    }
-
-    /**
-     * 向调度器中注册Job监听器
-     *
-     * @param jobKey JobKey
-     * @throws Exception 自定义异常
-     */
-    public void registerStdJobDetailListener(JobKey jobKey) throws Exception {
-        Matcher<JobKey> jobKeyMatcher = KeyMatcher.keyEquals(jobKey);
-        try {
-            scheduler.getListenerManager().addJobListener(new StdJobListener(), jobKeyMatcher);
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-            throw new Exception("注册监听器失败");
-        }
-    }
-
-    /**
-     * 向调度器中注册Job监听器
-     *
-     * @param name  JobKey.name
-     * @param group JobKey.group
-     * @throws Exception 自定义异常
-     */
-    public void registerStdJobDetailListener(String name, String group) throws Exception {
-        JobKey jobKey = new JobKey(name, group);
-        this.registerStdJobDetailListener(jobKey);
-    }
-
-    /**
-     * 向调度器中注册Trigger监听器
-     *
-     * @param triggerKey TriggerKey
-     * @throws Exception 自定义异常
-     */
-    public void registerStdTriggerListener(TriggerKey triggerKey) throws Exception {
-        Matcher<TriggerKey> triggerKeyMatcher = KeyMatcher.keyEquals(triggerKey);
-        try {
-            scheduler.getListenerManager().addTriggerListener(new StdTriggerListener(), triggerKeyMatcher);
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-            throw new Exception("注册监听器失败");
-        }
-    }
-
-    /**
-     * 向调度器中注册Trigger监听器
-     *
-     * @param name  TriggerKey.name
-     * @param group TriggerKey.group
-     * @throws Exception 自定义异常
-     */
-    public void registerStdTriggerListener(String name, String group) throws Exception {
-        TriggerKey triggerKey = new TriggerKey(name, group);
-        this.registerStdTriggerListener(triggerKey);
     }
 
     /**
