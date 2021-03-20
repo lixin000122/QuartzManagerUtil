@@ -1,8 +1,6 @@
-import com.sun.istack.internal.NotNull;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.matchers.GroupMatcher;
-import org.quartz.impl.matchers.KeyMatcher;
 
 import java.util.List;
 import java.util.Set;
@@ -19,7 +17,7 @@ import static org.quartz.CronScheduleBuilder.cronSchedule;
  * @version 1.0.0
  * @author lixin000122
  */
-public class QuartzManagerUtil {
+public final class QuartzManagerUtil {
 
     /**
      * 调度管理器实例使用的调度器
