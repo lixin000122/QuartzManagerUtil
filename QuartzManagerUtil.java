@@ -1,6 +1,9 @@
+package com.utils.demo.utils;
+
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.matchers.GroupMatcher;
+import org.quartz.impl.matchers.KeyMatcher;
 
 import java.util.List;
 import java.util.Set;
@@ -14,7 +17,7 @@ import static org.quartz.CronScheduleBuilder.cronSchedule;
  * 需要引入quartz及c3p0依赖<br>
  * 使用quartz.properties进行配置
  *
- * @version 1.0.0
+ * @version 1.1.0
  * @author lixin000122
  */
 public final class QuartzManagerUtil {
@@ -356,6 +359,94 @@ public final class QuartzManagerUtil {
         JobDetail jobDetail = this.createJob(jobClass, jobName, jobGroup);
         Trigger trigger = this.createTrigger(triggerName, triggerGroup, cron);
         this.registerTask(jobDetail, trigger);
+    }
+
+    /**
+     * 向调度器中注册任务监听
+     *
+     * @param jobListenerClass  需要监听的任务类
+     * @param jobKey            需要监听的任务的jobKey
+     * @throws Exception        自定义异常
+     */
+    public void registerJobDetailListener(Class<? extends JobListener> jobListenerClass, JobKey jobKey) throws Exception {
+        Matcher<JobKey> jobKeyMatcher = KeyMatcher.keyEquals(jobKey);
+        try {
+            scheduler.getListenerManager().addJobListener(jobListenerClass.newInstance(), jobKeyMatcher);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+            throw new Exception("出现了实例化异常，可能是传入的监听类没有无参构造方法");
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            throw new Exception("出现了访问权限异常，可能是错误的使用了private修饰符");
+        }
+    }
+
+    /**
+     * 向调度器中注册任务监听
+     *
+     * @param jobListenerClass  需要监听的任务类
+     * @param jobName           需要监听的任务的jobName
+     * @param jobGroup          需要监听的任务的jobGroup
+     * @throws Exception        自定义异常
+     */
+    public void registerJobDetailListener(Class<? extends JobListener> jobListenerClass, String jobName, String jobGroup) throws Exception {
+        JobKey jobKey = new JobKey(jobName, jobGroup);
+        this.registerJobDetailListener(jobListenerClass, jobKey);
+    }
+
+    /**
+     * 向调度器中注册任务监听
+     *
+     * @param jobListenerClass  需要监听的任务类
+     * @param jobDetail         需要监听的任务实例
+     * @throws Exception        自定义异常
+     */
+    public void registerJobDetailListener(Class<? extends JobListener> jobListenerClass, JobDetail jobDetail) throws Exception {
+        this.registerJobDetailListener(jobListenerClass, jobDetail.getKey());
+    }
+
+    /**
+     * 向调度器中注册触发器监听
+     *
+     * @param triggerListenerClass  触发器监听类
+     * @param triggerKey            需要监听的触发器的triggerKey
+     * @throws Exception            自定义异常
+     */
+    public void registerTriggerListener(Class<? extends TriggerListener> triggerListenerClass, TriggerKey triggerKey) throws Exception {
+        Matcher<TriggerKey> triggerKeyMatcher = KeyMatcher.keyEquals(triggerKey);
+        try {
+            scheduler.getListenerManager().addTriggerListener(triggerListenerClass.newInstance(), triggerKeyMatcher);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+            throw new Exception("出现了实例化异常，可能是传入的监听类没有无参构造方法");
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            throw new Exception("出现了访问权限异常，可能是错误的使用了private修饰符");
+        }
+    }
+
+    /**
+     * 向调度器中注册触发器监听
+     *
+     * @param triggerListenerClass  触发器监听类
+     * @param triggerName           需要监听的触发器的triggerName
+     * @param triggerGroup          需要监听的触发器的triggerGroup
+     * @throws Exception            自定义异常
+     */
+    public void registerTriggerListener(Class<? extends TriggerListener> triggerListenerClass, String triggerName, String triggerGroup) throws Exception {
+        TriggerKey triggerKey = new TriggerKey(triggerName, triggerGroup);
+        this.registerTriggerListener(triggerListenerClass, triggerKey);
+    }
+
+    /**
+     * 向调度器中注册触发器监听
+     *
+     * @param triggerListenerClass  触发器监听类
+     * @param trigger               需要监听的触发器
+     * @throws Exception            自定义异常
+     */
+    public void  registerTriggerListener(Class<? extends TriggerListener> triggerListenerClass, Trigger trigger) throws Exception {
+        this.registerTriggerListener(triggerListenerClass, trigger.getKey());
     }
 
     /**
