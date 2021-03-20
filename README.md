@@ -99,3 +99,34 @@ quartzManagerUtil.deleteJob(JobKey jobKey)
 ```
 quartzManagerUtil.updateTask(JobDetail jobDetail, Trigger trigger)
 ```
+## 简单实例
+* 复制MyJob类到项目中
+* 在主函数中写入以下代码
+```
+        //构建工具类实例
+        QuartzManagerUtil quartzManagerUtil = new QuartzManagerUtil();
+        //构建定时任务实例
+        JobDetail jobDetail = quartzManagerUtil.createJob(MyJob.class, "name1", "group1");
+        //构建触发器实例，定时为每十秒触发一次
+        Trigger trigger = quartzManagerUtil.createTrigger("trname1", "trgroup1", "0/10 * * * * ?");
+        //向调度器中注册任务
+        try {
+            quartzManagerUtil.registerTask(jobDetail, trigger);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //启动调度器
+        try {
+            quartzManagerUtil.startScheduler();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+```
+* 运行项目
+* 得到如下结果
+```
+Sat Mar 20 14:42:00 CST 2021: 定时任务正常执行
+Sat Mar 20 14:42:10 CST 2021: 定时任务正常执行
+Sat Mar 20 14:42:20 CST 2021: 定时任务正常执行
+...
+```
