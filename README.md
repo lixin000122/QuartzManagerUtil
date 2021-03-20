@@ -1,7 +1,12 @@
 QuartzManagerUtil
 =================
 ## 项目简介
+#### 简介
 基于spring的Quartz定时任务调度管理器工具类。
+#### 作者
+流云(lixin000122)
+#### 版本
+1.1.0
 ## 环境配置
 * JDK 1.8
 * spring boot 2.3.7.RELEASE
@@ -75,12 +80,20 @@ quartzManagerUtil.createJob(Class<? extends Job> jobClass, JobKey jobKey)
 
 返回JobDetail对象
 ```
+* 例:创建使用MyJob类，名为name1，归属group1组的定时任务实例
+```
+JobDetail jobDetail = quartzManagerUtil.createJob(MyJob.class, "name1", "group1");
+```
 ### 触发器方法
 * 创建Trigger实例方法(含重载方法)
 ```
 quartzManagerUtil.createTrigger(TriggerKey triggerKey, String cron)
 
 返回Trigger对象
+```
+* 例:创建名为name1，归属group1组的触发器，定时每十秒触发一次
+```
+Trigger trigger = quartzManagerUtil.createTrigger("name1", "group1", "0/10 * * * * ?");
 ```
 ### 调度器方法
 * 向调度器中注册任务方法(含重载方法)
@@ -98,6 +111,17 @@ quartzManagerUtil.deleteJob(JobKey jobKey)
 * 更新调度器中任务方法(含重载方法)
 ```
 quartzManagerUtil.updateTask(JobDetail jobDetail, Trigger trigger)
+```
+### 监听器方法
+* 向调度器中注册任务监听器方法(含重载方法)
+* 例:创建使用StdJobListener类的监听器监听jobKey对应的定时任务
+```
+quartzManagerUtil.registerJobDetailListener(StdJobListener.class, jobKey);
+```
+* 向调度器中注册触发器监听器方法(含重载方法)
+* 例:创建使用StdTriggerListener类的监听器监听jobKey对应的定时任务
+```
+quartzManagerUtil.registerTriggerListener(StdTriggerListener.class, triggerKey);
 ```
 ## 简单实例
 * 复制MyJob类到项目中
@@ -125,6 +149,7 @@ quartzManagerUtil.updateTask(JobDetail jobDetail, Trigger trigger)
 * 运行项目
 * 得到如下结果
 ```
+...
 Sat Mar 20 14:42:00 CST 2021: 定时任务正常执行
 Sat Mar 20 14:42:10 CST 2021: 定时任务正常执行
 Sat Mar 20 14:42:20 CST 2021: 定时任务正常执行
